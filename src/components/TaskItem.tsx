@@ -11,12 +11,10 @@ interface TaskItemProps {
   project?: Project;
   onToggle: (id: string, completed: boolean) => void | Promise<void>;
   onDelete: (id: string) => void | Promise<void>;
-  onAddSubtask?: (id: string) => void;
+  onAddSubtask?: () => void;
 }
 
-// ⚡ Bolt Optimization: Wrapped TaskItem in React.memo to prevent unnecessary re-renders when parent state changes.
-// Reduces re-renders significantly in large lists, especially when filtering or sorting.
-export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, project, onToggle, onDelete, onAddSubtask }) => {
+export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onToggle, onDelete, onAddSubtask }) => {
   const urgencyStyles = {
     low: { text: "Low", classes: "text-emerald-500", border: "border-emerald-500/50", dot: "bg-emerald-500" },
     medium: { text: "Medium", classes: "text-blue-400", border: "border-blue-500/50", dot: "bg-blue-400" },
@@ -100,7 +98,6 @@ export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, p
         {/* Checkbox */}
         <button 
           onClick={() => onToggle(task.id, !task.completed)}
-          aria-label={task.completed ? "Undo task" : "Complete task"}
           className={cn(
             "w-6 h-6 rounded-md flex-shrink-0 flex items-center justify-center transition-all duration-300 border-2 active:scale-95",
             task.completed ? "bg-primary border-primary" : urgencyStyles[task.urgency].border
@@ -174,9 +171,8 @@ export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, p
         <div className="text-right shrink-0 flex items-center gap-1 sm:gap-2 relative pointer-events-auto">
           {onAddSubtask && !task.completed && (
             <button 
-               onClick={(e) => { e.stopPropagation(); onAddSubtask(task.id); }}
+               onClick={(e) => { e.stopPropagation(); onAddSubtask(); }}
                title="Add subtask"
-               aria-label="Add subtask"
                className="text-neutral-500 hover:text-white transition-all p-2 hover:scale-110 active:scale-95 sm:opacity-0 sm:group-hover:opacity-100 sm:absolute sm:-left-32"
             >
                <Plus className="w-4 h-4" />
@@ -184,7 +180,6 @@ export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, p
           )}
           <button 
              onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}
-             aria-label="Delete task"
              className="text-neutral-500 hover:text-rose-500 transition-all p-2 hover:scale-110 active:scale-95 hidden sm:block sm:opacity-0 sm:group-hover:opacity-100 sm:absolute sm:-left-24"
           >
              <Trash2 className="w-4 h-4" />
@@ -204,7 +199,5 @@ export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, p
       </motion.div>
     </motion.div>
   );
-});
-
-TaskItem.displayName = 'TaskItem';
+}
 

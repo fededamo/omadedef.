@@ -58,8 +58,7 @@ async function startServer() {
       (req as any).user = decoded;
       next();
     } catch (e: any) {
-      // 🛡️ Sentinel: Removed error details to prevent information leakage
-      return res.status(401).json({ error: "Unauthorized: Token verification failed" });
+      return res.status(401).json({ error: "Unauthorized: Token verification failed", details: e.message });
     }
   };
 
