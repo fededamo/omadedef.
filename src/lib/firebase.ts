@@ -3,7 +3,12 @@ import { getAuth } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from 'firebase/firestore';
 import * as firebaseConfig from '../../firebase-applet-config.json';
 
-const app = initializeApp(firebaseConfig);
+const config = {
+  ...firebaseConfig,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || firebaseConfig.apiKey
+};
+
+const app = initializeApp(config);
 
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({tabManager: persistentMultipleTabManager()})
