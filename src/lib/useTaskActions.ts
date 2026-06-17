@@ -17,7 +17,8 @@ export function useTaskActions(
       hasAutoPurged.current = true;
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-      const oldTaskIds = tasks.filter(t => t.completed && t.updatedAt && new Date(t.updatedAt) < thirtyDaysAgo).map(t => t.id);
+      const thirtyDaysAgoIso = thirtyDaysAgo.toISOString();
+      const oldTaskIds = tasks.filter(t => t.completed && t.updatedAt && t.updatedAt < thirtyDaysAgoIso).map(t => t.id);
       if (oldTaskIds.length > 0) {
         deleteTasksBatch(oldTaskIds);
       }
@@ -27,7 +28,8 @@ export function useTaskActions(
   const handlePurgeOldTasks = useCallback(async () => {
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const oldTaskIds = tasks.filter(t => t.completed && t.updatedAt && new Date(t.updatedAt) < thirtyDaysAgo).map(t => t.id);
+    const thirtyDaysAgoIso = thirtyDaysAgo.toISOString();
+    const oldTaskIds = tasks.filter(t => t.completed && t.updatedAt && t.updatedAt < thirtyDaysAgoIso).map(t => t.id);
     if (oldTaskIds.length > 0) {
       await deleteTasksBatch(oldTaskIds);
     }
