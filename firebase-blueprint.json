@@ -1,0 +1,97 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A registered user in the application.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "createdAt"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "User-defined categories for grouping tasks.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "name": { "type": "string" },
+        "color": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "name", "createdAt"]
+    },
+    "Project": {
+      "title": "Project",
+      "description": "A project mapping multiple tasks to it with priority/metadata.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "urgency": { 
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "deadline": { "type": "string", "format": "date-time" },
+        "completed": { "type": "boolean" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "urgency", "completed", "createdAt", "updatedAt"]
+    },
+    "Task": {
+      "title": "Task",
+      "description": "A todo item with urgency, deadline, and category.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "categoryId": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "urgency": { 
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "deadline": { "type": "string", "format": "date-time" },
+        "completed": { "type": "boolean" },
+        "completedAt": { "type": "string", "format": "date-time" },
+        "parentId": { "type": "string" },
+        "projectId": { "type": "string" },
+        "recurrence": {
+          "type": "string",
+          "enum": ["daily", "weekdays", "weekly", "biweekly", "monthly", "yearly", "none"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "title", "urgency", "completed", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Public profiles of users, restricting reads to owner."
+    },
+    "users/{userId}/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "User categories."
+    },
+    "users/{userId}/projects/{projectId}": {
+      "schema": { "$ref": "#/entities/Project" },
+      "description": "Projects belonging to the user."
+    },
+    "users/{userId}/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/Task" },
+      "description": "Tasks belonging to the user."
+    }
+  }
+}

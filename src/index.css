@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  --color-background: #000000;
+  --color-foreground: #e5e5e5;
+  --color-card: #050505;
+  --color-card-foreground: #e5e5e5;
+  --color-popover: #0a0a0a;
+  --color-popover-foreground: #e5e5e5;
+  --color-primary: var(--app-accent);
+  --color-primary-foreground: #000000;
+  --color-secondary: #171717;
+  --color-secondary-foreground: #e5e5e5;
+  --color-muted: #171717;
+  --color-muted-foreground: #737373;
+  --color-accent: #262626;
+  --color-accent-foreground: var(--app-accent);
+  --color-destructive: #7f1d1d;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #262626;
+  --color-input: #171717;
+  --color-ring: var(--app-accent);
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --app-accent: #ffffff;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased min-h-[100dvh] selection:bg-primary selection:text-primary-foreground;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #262626; /* neutral-800 */
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #404040; /* neutral-700 */
+  }
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #262626 transparent;
+  }
+}
+
