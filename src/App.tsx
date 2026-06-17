@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from './lib/useAuth';
 import { useTasks } from './lib/useTasks';
 import { useProjects } from './lib/useProjects';
@@ -53,6 +53,13 @@ export default function App() {
     handleToggleTask,
     handleDeleteTask
   } = useTaskActions(tasks, addTask, updateTask, deleteTasksBatch, tasksLoading, parentTaskId);
+
+  // ⚡ Bolt Optimization: Extracted inline function to useCallback to provide a stable reference
+  // to the memoized TaskItem component, reducing unnecessary re-renders in the list.
+  const handleAddSubtask = useCallback((taskId: string) => {
+    setParentTaskId(taskId);
+    setShowTaskModal(true);
+  }, [setParentTaskId, setShowTaskModal]);
 
   const {
     searchQuery, setSearchQuery,
@@ -117,10 +124,7 @@ export default function App() {
           project={projects.find(p => p.id === task.projectId)}
           onToggle={handleToggleTask}
           onDelete={handleDeleteTask}
-          onAddSubtask={() => {
-            setParentTaskId(task.id);
-            setShowTaskModal(true);
-          }}
+          onAddSubtask={handleAddSubtask}
         />
         {subtasks.length > 0 && (
           <div className="pl-6 sm:pl-10 flex flex-col gap-2 border-l border-neutral-900 ml-3 sm:ml-5 -mt-1">
