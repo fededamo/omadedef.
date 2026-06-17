@@ -11,10 +11,12 @@ interface TaskItemProps {
   project?: Project;
   onToggle: (id: string, completed: boolean) => void | Promise<void>;
   onDelete: (id: string) => void | Promise<void>;
-  onAddSubtask?: () => void;
+  onAddSubtask?: (id: string) => void;
 }
 
-export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onToggle, onDelete, onAddSubtask }) => {
+// ⚡ Bolt Optimization: Wrapped TaskItem in React.memo to prevent unnecessary re-renders when parent state changes.
+// Reduces re-renders significantly in large lists, especially when filtering or sorting.
+export const TaskItem: React.FC<TaskItemProps> = React.memo(({ task, category, project, onToggle, onDelete, onAddSubtask }) => {
   const urgencyStyles = {
     low: { text: "Low", classes: "text-emerald-500", border: "border-emerald-500/50", dot: "bg-emerald-500" },
     medium: { text: "Medium", classes: "text-blue-400", border: "border-blue-500/50", dot: "bg-blue-400" },
@@ -171,7 +173,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onT
         <div className="text-right shrink-0 flex items-center gap-1 sm:gap-2 relative pointer-events-auto">
           {onAddSubtask && !task.completed && (
             <button 
-               onClick={(e) => { e.stopPropagation(); onAddSubtask(); }}
+               onClick={(e) => { e.stopPropagation(); onAddSubtask(task.id); }}
                title="Add subtask"
                className="text-neutral-500 hover:text-white transition-all p-2 hover:scale-110 active:scale-95 sm:opacity-0 sm:group-hover:opacity-100 sm:absolute sm:-left-32"
             >
@@ -199,5 +201,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onT
       </motion.div>
     </motion.div>
   );
-}
+});
+
+TaskItem.displayName = 'TaskItem';
 
