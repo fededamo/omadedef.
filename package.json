@@ -10,7 +10,8 @@
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit && eslint firestore.rules",
-    "test": "vitest run"
+    "test": "vitest run",
+    "set-admin": "tsx scripts/set-admin.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

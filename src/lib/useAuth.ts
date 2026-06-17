@@ -8,12 +8,15 @@ export function useAuth() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
-      if (u && u.email !== 'federicodamodio@gmail.com') {
-        await signOut(auth);
-        console.error("Accesso negato. Solo federicodamodio@gmail.com può effettuare l'accesso.");
-        setUser(null);
-        setLoading(false);
-        return;
+      if (u) {
+        const idTokenResult = await u.getIdTokenResult();
+        if (!idTokenResult.claims.admin) {
+          await signOut(auth);
+          console.error("Accesso negato. L'utente non ha i permessi di amministratore.");
+          setUser(null);
+          setLoading(false);
+          return;
+        }
       }
       setUser(u);
       setLoading(false);

@@ -52,7 +52,7 @@ async function startServer() {
       }
       const token = authHeader.split('Bearer ')[1];
       const decoded = await getAuth().verifyIdToken(token);
-      if (decoded.email !== 'federicodamodio@gmail.com') {
+      if (!decoded.admin) {
         return res.status(403).json({ error: "Unauthorized: Invalid user" });
       }
       (req as any).user = decoded;
