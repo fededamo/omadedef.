@@ -1,8 +1,8 @@
 import React from 'react';
-import { Check, Clock, AlertCircle, Calendar, Trash2, Plus, Repeat, Bell, CheckCircle } from 'lucide-react';
+import { Check, Trash2, Plus, Repeat, Bell, CheckCircle } from 'lucide-react';
 import { Task, Category, Project } from '../types';
 import { cn } from '../lib/utils';
-import { format, differenceInDays } from 'date-fns';
+import { format } from 'date-fns';
 import { motion, PanInfo, useMotionValue, useTransform, useAnimation } from 'motion/react';
 
 interface TaskItemProps {
