@@ -39,7 +39,7 @@ export function useTasks(userId: string | undefined) {
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : new Date().toISOString(),
         updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate().toISOString() : new Date().toISOString()
-      } as Category));
+      } as unknown as Category));
       setCategories(catsData);
     }, (error) => handleFirestoreError(error, OperationType.LIST, `users/${userId}/categories`));
 
