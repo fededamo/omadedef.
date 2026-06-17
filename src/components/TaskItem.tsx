@@ -98,6 +98,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onT
         {/* Checkbox */}
         <button 
           onClick={() => onToggle(task.id, !task.completed)}
+          aria-label={task.completed ? "Undo task" : "Complete task"}
           className={cn(
             "w-6 h-6 rounded-md flex-shrink-0 flex items-center justify-center transition-all duration-300 border-2 active:scale-95",
             task.completed ? "bg-primary border-primary" : urgencyStyles[task.urgency].border
@@ -173,6 +174,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onT
             <button 
                onClick={(e) => { e.stopPropagation(); onAddSubtask(); }}
                title="Add subtask"
+               aria-label="Add subtask"
                className="text-neutral-500 hover:text-white transition-all p-2 hover:scale-110 active:scale-95 sm:opacity-0 sm:group-hover:opacity-100 sm:absolute sm:-left-32"
             >
                <Plus className="w-4 h-4" />
@@ -180,6 +182,7 @@ export const TaskItem: React.FC<TaskItemProps> = ({ task, category, project, onT
           )}
           <button 
              onClick={(e) => { e.stopPropagation(); onDelete(task.id); }}
+             aria-label="Delete task"
              className="text-neutral-500 hover:text-rose-500 transition-all p-2 hover:scale-110 active:scale-95 hidden sm:block sm:opacity-0 sm:group-hover:opacity-100 sm:absolute sm:-left-24"
           >
              <Trash2 className="w-4 h-4" />
