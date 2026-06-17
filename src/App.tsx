@@ -28,7 +28,7 @@ import { Appointment } from './types';
 
 export default function App() {
   const { user, loading: authLoading, loginWithGoogle, logout } = useAuth();
-  const { tasks, categories, loading: tasksLoading, addTask, updateTask, deleteTask, deleteTasksBatch, addCategory, deleteCategory } = useTasks(user?.uid);
+  const { tasks, categories, loading: tasksLoading, addTask, addTasksBatch, updateTask, deleteTask, deleteTasksBatch, addCategory, deleteCategory } = useTasks(user?.uid);
   const { projects, loading: projectsLoading, addProject, updateProject, deleteProject } = useProjects(user?.uid);
   const { appointments, loadingAppts, addAppointment, updateAppointment, deleteAppointment } = useAppointments(user?.uid);
   
@@ -52,7 +52,7 @@ export default function App() {
     handleManualTaskSave,
     handleToggleTask,
     handleDeleteTask
-  } = useTaskActions(tasks, addTask, updateTask, deleteTasksBatch, tasksLoading, parentTaskId);
+  } = useTaskActions(tasks, addTask, addTasksBatch, updateTask, deleteTasksBatch, tasksLoading, parentTaskId);
 
   const {
     searchQuery, setSearchQuery,

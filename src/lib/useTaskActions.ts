@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from 'react';
 export function useTaskActions(
   tasks: any[], 
   addTask: any, 
+  addTasksBatch: any,
   updateTask: any, 
   deleteTasksBatch: any, 
   tasksLoading: boolean,
@@ -34,24 +35,27 @@ export function useTaskActions(
   }, [tasks, deleteTasksBatch]);
 
   const handleTasksGenerated = useCallback(async (generatedTasks: any[]) => {
-    for (const taskData of generatedTasks) {
+    const tasksToAdd = generatedTasks.map((taskData) => {
       let deadlineIso = "";
       if (taskData.suggestedDeadlineDaysAt) {
         const d = new Date();
         d.setDate(d.getDate() + taskData.suggestedDeadlineDaysAt);
         deadlineIso = d.toISOString();
       }
-      
-      await addTask({
+      return {
         title: taskData.title,
         description: taskData.description || '',
         categoryId: taskData.categoryId || '',
         urgency: taskData.urgency || 'medium',
         deadline: deadlineIso,
         completed: false
-      });
+      };
+    });
+
+    if (tasksToAdd.length > 0) {
+      await addTasksBatch(tasksToAdd);
     }
-  }, [addTask]);
+  }, [addTasksBatch]);
 
   const handleManualTaskSave = useCallback(async (taskData: any) => {
     await addTask({ 

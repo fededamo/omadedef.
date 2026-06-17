@@ -134,5 +134,30 @@ export function useTasks(userId: string | undefined) {
     }
   };
 
-  return { tasks, categories, loading, addTask, updateTask, deleteTask, deleteTasksBatch, addCategory, deleteCategory };
+  const addTasksBatch = async (tasksData: Omit<Task, 'id' | 'userId' | 'createdAt' | 'updatedAt'>[]) => {
+    if (!userId || tasksData.length === 0) return;
+    try {
+      // Chunk into batches of 500
+      for (let i = 0; i < tasksData.length; i += 500) {
+        const batch = writeBatch(db);
+        const chunk = tasksData.slice(i, i + 500);
+        for (const taskData of chunk) {
+          const newId = crypto.randomUUID();
+          const task = Object.fromEntries(Object.entries({
+            ...taskData,
+            id: newId,
+            userId,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          }).filter(([_, v]) => v !== undefined));
+          batch.set(doc(db, `users/${userId}/tasks`, newId), task);
+        }
+        await batch.commit();
+      }
+    } catch(e) {
+      handleFirestoreError(e, OperationType.CREATE, `users/${userId}/tasks`);
+    }
+  };
+
+  return { tasks, categories, loading, addTask, addTasksBatch, updateTask, deleteTask, deleteTasksBatch, addCategory, deleteCategory };
 }
