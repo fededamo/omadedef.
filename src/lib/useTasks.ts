@@ -35,11 +35,18 @@ export function useTasks(userId: string | undefined) {
 
     const qCats = query(collection(db, `users/${userId}/categories`));
     const unsubscribeCats = onSnapshot(qCats, (snapshot) => {
-      const catsData = snapshot.docs.map(doc => ({
-        ...doc.data(),
-        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : new Date().toISOString(),
-        updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate().toISOString() : new Date().toISOString()
-      } as Category));
+      const catsData = snapshot.docs.map(doc => {
+        const d = doc.data();
+        return {
+          id: doc.id,
+          userId: d.userId || userId,
+          name: d.name || '',
+          color: d.color || '#000000',
+          ...d,
+          createdAt: d.createdAt?.toDate ? d.createdAt.toDate().toISOString() : new Date().toISOString(),
+          updatedAt: d.updatedAt?.toDate ? d.updatedAt.toDate().toISOString() : new Date().toISOString()
+        } as Category;
+      });
       setCategories(catsData);
     }, (error) => handleFirestoreError(error, OperationType.LIST, `users/${userId}/categories`));
 
