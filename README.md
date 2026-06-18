@@ -44,31 +44,91 @@ Prima di iniziare, assicurati di avere installato Node.js e **pnpm** (il package
    pnpm run dev
    ```
 
-## ☁️ Come deployare l'app in modo semplice
+## ☁️ Come deployare l'app: Guida Step-by-Step
 
-Ho progettato l'architettura per essere super semplice da pubblicare. Utilizzeremo **Google Cloud Run** per l'hosting e **Firebase** per database e sicurezza.
+Ho progettato l'architettura per essere semplice e robusta da pubblicare. Utilizzeremo **Firebase** per il database (Firestore) e l'autenticazione, e **Google Cloud Run** per ospitare l'applicazione Node.js, sfruttando i Buildpacks (nessun Dockerfile necessario!).
 
-### 1. Database Firestore (Firebase)
-Assicurati di aver configurato un progetto Firebase. Le regole di sicurezza del tuo database Firestore (`firestore.rules`) sono cruciali per mantenere i tuoi dati al sicuro.
-Per pubblicare le regole di Firestore, apri il terminale ed esegui:
-```bash
-firebase deploy --only firestore
-```
-
-### 2. Applicazione (Google Cloud Run)
-Per ospitare l'app non hai bisogno di complicati file Docker! I "Buildpacks" di Google Cloud capiranno automaticamente che è un progetto Node.js, eseguiranno la build (`pnpm build`) e avvieranno il server di produzione in Express (`pnpm start`).
-
-Assicurati di avere la CLI di Google Cloud (`gcloud`) installata e autenticata sul tuo progetto. Esegui semplicemente questo comando per deployare tutto in un colpo solo:
-
-```bash
-gcloud run deploy smart-task-manager \
-  --source . \
-  --region europe-west1 \
-  --allow-unauthenticated \
-  --set-env-vars="GEMINI_API_KEY=inserisci_qui_la_tua_chiave,NODE_ENV=production"
-```
-
-*Nota: sostituisci `europe-west1` con la regione che preferisci e inserisci la tua vera chiave al posto di `inserisci_qui_la_tua_chiave`.*
+### 📋 Prerequisiti
+Prima di iniziare, assicurati di avere:
+1. Un **Account Google** con fatturazione abilitata su Google Cloud Platform (necessario per Cloud Run, ma offre un generoso piano gratuito).
+2. Installato la **CLI di Google Cloud (`gcloud`)**. [Scaricala qui](https://cloud.google.com/sdk/docs/install).
+3. Installato la **CLI di Firebase (`firebase-tools`)**. Installala tramite npm: `npm install -g firebase-tools`.
 
 ---
-Tutto qui! Spero che questa app ti piaccia. Divertiti ad organizzare i tuoi task con Gemini! ✨
+
+### Fase 1: Configurazione e Deploy del Database (Firebase Firestore)
+
+Questa fase serve a creare il progetto e mettere al sicuro i tuoi dati.
+
+1. **Crea un Progetto Firebase:**
+   - Vai sulla [Console di Firebase](https://console.firebase.google.com/).
+   - Clicca su "Aggiungi progetto", dagli un nome (es. `smart-task-manager-app`) e segui la procedura.
+
+2. **Abilita l'Autenticazione:**
+   - Nel menu a sinistra di Firebase, vai su **Build > Authentication**.
+   - Clicca su "Get Started".
+   - Vai nella scheda "Sign-in method", seleziona **Google** (o Email/Password), e abilitalo.
+
+3. **Abilita Firestore Database:**
+   - Vai su **Build > Firestore Database**.
+   - Clicca "Create database". Scegli una location (es. `eur3 (Europe)`).
+   - Inizia in **Modalità di Produzione** (Production mode). Le regole di sicurezza le imposteremo noi a breve.
+
+4. **Autenticati e Inizializza Firebase nel terminale:**
+   Apri il terminale nella cartella del progetto locale e digita:
+   ```bash
+   firebase login
+   firebase use --add
+   ```
+   *Seleziona il progetto appena creato dalla lista.*
+
+5. **Esegui il Deploy delle Regole di Sicurezza:**
+   Il file `firestore.rules` nel progetto contiene già le regole per proteggere le attività degli utenti. Deployale con:
+   ```bash
+   firebase deploy --only firestore:rules
+   ```
+
+---
+
+### Fase 2: Deploy dell'Applicazione (Google Cloud Run)
+
+Ora pubblicheremo il codice sorgente (frontend + backend). Cloud Run capirà in automatico, leggendo il `package.json`, di dover eseguire `pnpm build` e poi avviare il server con `pnpm start`.
+
+1. **Autenticati su Google Cloud:**
+   ```bash
+   gcloud auth login
+   gcloud config set project <ID-DEL-TUO-PROGETTO>
+   ```
+   *(Puoi trovare l'ID del progetto nelle impostazioni del progetto su Firebase o Google Cloud Console).*
+
+2. **Abilita le API necessarie su Google Cloud:**
+   ```bash
+   gcloud services enable run.googleapis.com cloudbuild.googleapis.com
+   ```
+
+3. **Esegui il Deploy con un solo comando:**
+   Lancia il seguente comando per creare e deployare il servizio:
+   ```bash
+   gcloud run deploy smart-task-manager \
+     --source . \
+     --region europe-west1 \
+     --allow-unauthenticated \
+     --set-env-vars="GEMINI_API_KEY=inserisci_qui_la_tua_chiave_gemini,NODE_ENV=production"
+   ```
+   - *`--region europe-west1`: Scegli la regione più vicina a te (es. `europe-west1` per il Belgio, `europe-southwest1` per Madrid).*
+   - *`GEMINI_API_KEY`: Inserisci la tua vera chiave API di Google AI Studio.*
+
+4. **Ottieni l'URL pubblico!**
+   Al termine del processo (potrebbe richiedere un paio di minuti per la build automatica), il terminale ti restituirà l'URL pubblico della tua applicazione (es. `https://smart-task-manager-abcde-ew.a.run.app`).
+
+---
+
+### Fase 3: Aggiungi l'URL ai domini autorizzati
+
+Per permettere l'accesso tramite Firebase Auth sull'app pubblicata, devi autorizzare il nuovo dominio di Cloud Run in Firebase:
+
+1. Vai sulla Console di Firebase > **Authentication** > **Settings** (o **Impostazioni**) > **Authorized domains**.
+2. Clicca su **Add domain** e incolla l'URL che Cloud Run ti ha fornito al passo precedente (senza `https://` o `/` finali).
+
+---
+🎉 **Fatto!** L'app è ora online, sicura e funzionante nel cloud. Divertiti ad organizzare le tue task con l'IA! ✨
