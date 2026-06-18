@@ -19,12 +19,12 @@ export function MobileNav({
   if (appMode !== 'tasks') return null;
 
   return (
-    <div className="lg:hidden shrink-0 border-b border-neutral-900 bg-[#000]/95 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex overflow-x-auto gap-2 hide-scrollbar items-center z-40 sticky top-0 w-full snap-x">
+    <div className="lg:hidden shrink-0 bg-transparent px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))] flex overflow-x-auto gap-3 hide-scrollbar items-center z-40 sticky top-0 w-full snap-x">
      <button 
        onClick={() => setActiveView('all')}
        className={cn(
          "snap-start whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium transition-colors border shrink-0 outline-none",
-         activeView === 'all' ? "bg-white text-black border-white" : "bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-neutral-200"
+         activeView === 'all' ? "bg-white text-black border-transparent" : "bg-transparent text-neutral-400 border-neutral-800/50 hover:text-neutral-200"
        )}
      >
        All
@@ -33,7 +33,7 @@ export function MobileNav({
        onClick={() => setActiveView('today')}
        className={cn(
          "snap-start whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium transition-colors border shrink-0 outline-none",
-         activeView === 'today' ? "bg-white text-black border-white" : "bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-neutral-200"
+         activeView === 'today' ? "bg-white text-black border-transparent" : "bg-transparent text-neutral-400 border-neutral-800/50 hover:text-neutral-200"
        )}
      >
        Today
@@ -42,7 +42,7 @@ export function MobileNav({
        onClick={() => setActiveView('upcoming')}
        className={cn(
          "snap-start whitespace-nowrap px-4 py-1.5 rounded-full text-xs font-medium transition-colors border shrink-0 outline-none",
-         activeView === 'upcoming' ? "bg-white text-black border-white" : "bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-neutral-200"
+         activeView === 'upcoming' ? "bg-white text-black border-transparent" : "bg-transparent text-neutral-400 border-neutral-800/50 hover:text-neutral-200"
        )}
      >
        Upcoming
@@ -60,7 +60,7 @@ export function MobileNav({
          onClick={() => setActiveView(`category:${c.id}`)}
          className={cn(
            "snap-start whitespace-nowrap pl-4 pr-3 py-1.5 rounded-full text-xs font-medium transition-colors flex items-center justify-center border shrink-0 relative overflow-hidden group outline-none",
-           activeView === `category:${c.id}` ? "bg-white/10 text-white border-neutral-700" : "bg-neutral-900 text-neutral-400 border-neutral-800 hover:text-neutral-200"
+           activeView === `category:${c.id}` ? "bg-white/10 text-white border-transparent" : "bg-transparent text-neutral-400 border-neutral-800/50 hover:text-neutral-200"
          )}
        >
          <div className="flex items-center gap-2 z-10 relative">

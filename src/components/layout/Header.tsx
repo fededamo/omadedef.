@@ -26,7 +26,7 @@ export function Header({ user, logout }: HeaderProps) {
   }, []);
 
   return (
-    <header className="pt-[max(env(safe-area-inset-top),0px)] h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-16 sm:pt-0 shrink-0 border-b border-neutral-800 flex items-center justify-between px-4 sm:px-8 bg-neutral-950/50 z-20 relative">
+    <header className="pt-[max(env(safe-area-inset-top),0px)] h-[calc(3.5rem+env(safe-area-inset-top))] sm:h-16 sm:pt-0 shrink-0 flex items-center justify-between px-4 sm:px-8 bg-transparent z-20 relative">
       <div className="flex items-center gap-3 sm:gap-4">
         <div className="sm:hidden relative">
           <button 
