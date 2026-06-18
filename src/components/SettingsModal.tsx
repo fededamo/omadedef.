@@ -51,7 +51,8 @@ export function SettingsModal({ isOpen, onClose, tasks, onPurgeOldTasks }: Setti
   
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const oldTasks = tasks.filter(t => t.completed && t.updatedAt && new Date(t.updatedAt) < thirtyDaysAgo);
+  const thirtyDaysAgoIso = thirtyDaysAgo.toISOString();
+  const oldTasks = tasks.filter(t => t.completed && t.updatedAt && t.updatedAt < thirtyDaysAgoIso);
 
   return (
     <AnimatePresence>

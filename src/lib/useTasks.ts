@@ -38,7 +38,8 @@ export function useTasks(userId: string | undefined) {
       const catsData = snapshot.docs.map(doc => ({
         ...doc.data(),
         createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate().toISOString() : new Date().toISOString(),
-        updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate().toISOString() : new Date().toISOString()
+        updatedAt: doc.data().updatedAt?.toDate ? doc.data().updatedAt.toDate().toISOString() : new Date().toISOString(),
+        id: doc.id
       } as unknown as Category));
       setCategories(catsData);
     }, (error) => handleFirestoreError(error, OperationType.LIST, `users/${userId}/categories`));

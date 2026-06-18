@@ -52,7 +52,14 @@ async function startServer() {
       }
       const token = authHeader.split('Bearer ')[1];
       const decoded = await getAuth().verifyIdToken(token);
-      if (decoded.email !== 'federicodamodio@gmail.com') {
+      const authorizedEmail = process.env.AUTHORIZED_EMAIL;
+
+      if (!authorizedEmail) {
+        console.error("AUTHORIZED_EMAIL environment variable is not set.");
+        return res.status(500).json({ error: "Server configuration error" });
+      }
+
+      if (decoded.email !== authorizedEmail) {
         return res.status(403).json({ error: "Unauthorized: Invalid user" });
       }
       (req as any).user = decoded;
@@ -90,8 +97,9 @@ async function startServer() {
       try {
         response = await ai.models.generateContent({
           model: "gemini-2.5-flash",
-          contents: `Analyze this raw task input and return a structured list of actionable subtasks (or a single task). Assign urgencies and estimate a deadline from now if implied. IMPORTANT: Preserve the original language of the input (e.g., if Italian, output title and description in Italian). Input: "${text}"`,
+          contents: text,
           config: {
+            systemInstruction: "Analyze this raw task input and return a structured list of actionable subtasks (or a single task). Assign urgencies and estimate a deadline from now if implied. IMPORTANT: Preserve the original language of the input (e.g., if Italian, output title and description in Italian).",
             responseMimeType: "application/json",
             responseSchema: {
               type: Type.ARRAY,
@@ -114,8 +122,9 @@ async function startServer() {
           console.warn("Falling back to gemini-1.5-flash due to rate limits.");
           response = await ai.models.generateContent({
             model: "gemini-1.5-flash",
-            contents: `Analyze this raw task input and return a structured list of actionable subtasks (or a single task). Assign urgencies and estimate a deadline from now if implied. IMPORTANT: Preserve the original language of the input (e.g., if Italian, output title and description in Italian). Input: "${text}"`,
+            contents: text,
             config: {
+              systemInstruction: "Analyze this raw task input and return a structured list of actionable subtasks (or a single task). Assign urgencies and estimate a deadline from now if implied. IMPORTANT: Preserve the original language of the input (e.g., if Italian, output title and description in Italian).",
               responseMimeType: "application/json",
               responseSchema: {
                 type: Type.ARRAY,
