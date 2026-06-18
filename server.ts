@@ -52,7 +52,14 @@ async function startServer() {
       }
       const token = authHeader.split('Bearer ')[1];
       const decoded = await getAuth().verifyIdToken(token);
-      if (decoded.email !== 'federicodamodio@gmail.com') {
+      const authorizedEmail = process.env.AUTHORIZED_EMAIL;
+
+      if (!authorizedEmail) {
+        console.error("AUTHORIZED_EMAIL environment variable is not set.");
+        return res.status(500).json({ error: "Server configuration error" });
+      }
+
+      if (decoded.email !== authorizedEmail) {
         return res.status(403).json({ error: "Unauthorized: Invalid user" });
       }
       (req as any).user = decoded;
