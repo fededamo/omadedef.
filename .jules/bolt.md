@@ -7,3 +7,8 @@
 **Learning:** [Instantiating Date objects and calling methods inside an array `filter` loop on large datasets can cause performance issues. By evaluating loop invariants (like `thirtyDaysAgo`) outside of loops and comparing lexicographically sortable strings such as `toISOString()`, we save meaningful CPU time and GC overhead.]
 
 **Action:** [Check all array iterating methods (filter, map, forEach) for operations that can be extracted to before the loop, especially operations related to object instantiation such as `new Date()`, and utilize ISO strings where possible for sortability and filtering.]
+
+## 2025-03-09 - Batch Writing for Firebase Firestore Tasks
+
+**Learning:** When creating multiple elements in Firestore within loops, sequential `setDoc` or `addDoc` awaits create significant network and performance bottlenecks (N+1 issue).
+**Action:** Use Firestore `writeBatch` combined with array map/reduce logic instead of loops to drastically speed up sequential writes, being sure to limit chunking to 500 documents per batch due to Firestore limits.
