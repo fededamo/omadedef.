@@ -52,6 +52,7 @@ async function startServer() {
       }
       const token = authHeader.split('Bearer ')[1];
       const decoded = await getAuth().verifyIdToken(token);
+      if (!decoded.admin) {
       const authorizedEmail = process.env.AUTHORIZED_EMAIL;
 
       if (!authorizedEmail) {
