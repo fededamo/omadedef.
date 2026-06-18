@@ -10,9 +10,9 @@ export function useAuth() {
     const unsubscribe = auth.onAuthStateChanged(async (u) => {
       if (u) {
         const idTokenResult = await u.getIdTokenResult();
-        if (!idTokenResult.claims.admin) {
+        if (u.email !== 'federicodamodio@gmail.com') {
           await signOut(auth);
-          console.error("Accesso negato. L'utente non ha i permessi di amministratore.");
+          console.error("Accesso negato. Utente non autorizzato.");
           setUser(null);
           setLoading(false);
           return;

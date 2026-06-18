@@ -39,10 +39,10 @@ export function Sidebar({
   });
 
   return (
-    <aside className="w-64 shrink-0 border-r border-neutral-900 p-6 flex flex-col gap-8 bg-black hidden lg:flex overflow-y-auto">
+    <aside className="w-64 shrink-0 p-8 flex flex-col gap-10 bg-transparent hidden lg:flex overflow-y-auto">
       
       {/* App Mode Switch */}
-      <div className="flex flex-col bg-neutral-900/50 p-1.5 rounded-2xl shadow-inner border border-neutral-800 gap-1">
+      <div className="flex flex-col gap-2">
         <button
           onClick={() => setAppMode('tasks')}
           className={cn(
@@ -162,7 +162,7 @@ export function Sidebar({
       </section>
 
       <div className="mt-auto">
-        <div className="p-4 rounded-xl bg-neutral-900/50 border border-neutral-800">
+        <div className="p-4">
           <p className="text-[11px] leading-relaxed text-neutral-500">Push notifications are currently optimized for <span className="text-blue-400 underline">WhatsApp</span>.</p>
         </div>
       </div>
