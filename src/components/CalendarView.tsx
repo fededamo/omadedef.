@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus, Clock, Bell, Calendar as CalIcon, CalendarDays, CalendarRange } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Calendar as CalIcon, CalendarDays, CalendarRange } from 'lucide-react';
 import { Appointment, Category, Task } from '../types';
 import { cn } from '../lib/utils';
 import { motion, AnimatePresence } from 'motion/react';

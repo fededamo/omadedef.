@@ -1,6 +1,6 @@
 import React from 'react';
 import { Project, Task, Category } from '../types';
-import { FolderPlus, Rocket, Trash2, Clock, Calendar } from 'lucide-react';
+import { FolderPlus, Rocket, Trash2, Calendar } from 'lucide-react';
 import { cn } from '../lib/utils';
 import { format } from 'date-fns';
 
